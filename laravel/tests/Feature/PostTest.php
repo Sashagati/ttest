@@ -14,6 +14,13 @@ class PostTest extends TestCase
 {
 
     use RefreshDatabase;
+    protected function setUp(): void
+    {
+        parent::setUp();
+        Storage::fake('local');
+
+    }
+
 
     /**
      * @test
@@ -24,7 +31,7 @@ class PostTest extends TestCase
 
         $this->withoutExceptionHandling();
 
-        Storage::fake('local');
+
 
 
         $file = File::create('my_image.jpg');
@@ -49,7 +56,6 @@ class PostTest extends TestCase
 
         $this->assertEquals($data['title'], $post->title);
         $this->assertEquals($data['description'], $post->description);
-
         $this->assertEquals('images/' . $file->hashName(), $post->image_url);
 
         Storage::disk('local')->assertExists($post->image_url);
@@ -80,9 +86,6 @@ class PostTest extends TestCase
     public function attribute_image_is_file_for_storing_post()
     {
 
-        Storage::fake('local');
-
-
         $file = File::create('my_image.jpg');
 
         $data = [
@@ -96,5 +99,46 @@ class PostTest extends TestCase
         $res->assertRedirect();
         $res->assertInvalid('image');
     }
+    /**
+     * @test
+     */
+    public function a_post_can_be_updated()
+    {
+        $this->withoutExceptionHandling();
+
+        $post = Post::factory()->create();
+        $file = File::create('image.jpg');
+
+        $data = [
+            'title' => 'Title edited',
+            'description' => 'description edited',
+            'image' => $file
+
+        ];
+        $res =  $this->patch('/posts/' . $post->id, $data);
+
+        $res->assertStatus(200);
+
+        $updatePost = Post::first();
+        $this->assertEquals($data['title'], $updatePost->title);
+        $this->assertEquals($data['description'], $updatePost->description);
+        $this->assertEquals('images/' . $file->hashName(), $updatePost->image_url);
+
+        $this->assertEquals($post->id, $updatePost->id);
+
+
+
+    }
+
+
+
+
+
+
+
+
+
+
+
 
 }
