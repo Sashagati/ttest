@@ -31,7 +31,7 @@ class PostTest extends TestCase
 
 
       $data = [
-          'title'=>'Same title',
+          'title'=>'Some title',
           'description'=>'description',
           'image'=>$file,
 
@@ -56,5 +56,25 @@ class PostTest extends TestCase
       Storage::disk('local')->assertExists($post->image_url);
 
   }
+    /**
+     * @test
+     */
+    public function attribute_title_is_required_for_storing_post()
+    {
+
+        $data = [
+            'title'=>'',
+            'description'=>'description',
+            'image'=>''
+
+        ];
+
+        $res = $this->post('/posts',$data);
+        $res->assertRedirect();
+        $res->assertInvalid('title');
+
+
+    }
+
 
 }
