@@ -16,7 +16,17 @@ class  PostController extends Controller
         $posts = Post::all();
         return view('posts.index', compact('posts'));
     }
-    public function store(UpdateRequest $request)
+
+
+    public function show(Post $post)
+
+    {
+        return view('posts.show', compact('post'));
+    }
+
+
+
+    public function store (UpdateRequest $request)
     {
         $data = $request->validated();
 
