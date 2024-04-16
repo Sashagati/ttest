@@ -125,6 +125,25 @@ class PostTest extends TestCase
         $this->assertEquals('images/' . $file->hashName(), $updatePost->image_url);
 
         $this->assertEquals($post->id, $updatePost->id);
+    }
+    /**
+     * @test
+     */
+    public function response_for_route_posts_index_is_view_post_index_with_post()
+    {
+        $this->withoutExceptionHandling();
+
+        $posts = Post::factory()->count(10)->create();
+
+        $response = $this->get('/posts');
+
+        $response->assertViewIs('posts.index');
+
+        $response->assertSeeText('View page');
+
+        $titles = $posts->pluck('title')->toArray();
+
+        $response->assertSeeText($titles);
 
 
 
