@@ -182,7 +182,24 @@ class PostTest extends TestCase
 
 
     }
+    /**
+     * @test
+     */
+    public function a_post_can_be_deleted_by_only_auth_user()
+    {
 
+
+        $post = Post::factory()->create();
+        $res = $this->delete('/posts/' . $post->id);
+
+        $res->assertRedirect();
+
+        $this->assertDatabaseCount('posts', 1);
+
+
+
+
+    }
 
 
 
