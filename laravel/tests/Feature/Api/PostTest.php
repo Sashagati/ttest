@@ -95,25 +95,29 @@ class PostTest extends TestCase
     }
 
 
-//    /**
-//     * @test
-//     */
-//    public function attribute_image_is_file_for_storing_post()
-//    {
-//
-//        $file = File::create('my_image.jpg');
-//
-//        $data = [
-//            'title' => 'Title',
-//            'description' => 'description',
-//            'image' => 'sdfsdf'
-//
-//        ];
-//
-//        $res = $this->post('/posts', $data);
-//        $res->assertRedirect();
-//        $res->assertInvalid('image');
-//    }
+    /**
+     * @test
+     */
+    public function attribute_image_is_file_for_storing_post()
+    {
+
+        $file = File::create('my_image.jpg');
+
+        $data = [
+            'title' => 'Title',
+            'description' => 'description',
+            'image' => 'sdfsdf'
+
+        ];
+
+        $res = $this->post('/posts', $data);
+        $res->assertStatus(422);
+        $res->assertInvalid('image');
+        $res->assertJsonValidationErrors([
+
+            'image' => 'The image field must be a file.'
+        ]);
+    }
 
 
 }
