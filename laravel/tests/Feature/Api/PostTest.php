@@ -119,5 +119,32 @@ class PostTest extends TestCase
         ]);
     }
 
+    /**
+     * @test
+     */
+    public function a_post_can_be_updated()
+    {
+        $this->withoutExceptionHandling();
+
+        $post = Post::factory()->create();
+        $file = File::create('image.jpg');
+
+        $data = [
+            'title' => 'Title edited',
+            'description' => 'description edited',
+            'image' => $file
+
+        ];
+        $res =  $this->patch('/api/posts/' . $post->id, $data);
+
+        $res->assertJson([
+            'id' => $post->id,
+            'title' => $data ['title'],
+            'description' => $data['description'],
+            'image_url' => 'images/' . $file->hashName(),
+            ]);
+
+    }
+
 
 }
