@@ -19,6 +19,9 @@ class PostTest extends TestCase
     {
         parent::setUp();
         Storage::fake('local');
+        $this->withHeaders([
+            'Accept' => 'application/json',
+        ]);
 
     }
 
@@ -73,6 +76,44 @@ class PostTest extends TestCase
         ]);
 
     }
+    /**
+     * @test
+     */
+    public function attribute_title_is_required_for_storing_post()
+    {
+
+        $data = [
+            'title' => '',
+            'description' => 'description',
+            'image' => ''
+
+        ];
+
+        $res = $this->post('/api/posts', $data);
+        $res->assertStatus(422);
+        $res->assertInvalid('title');
+    }
+
+
+//    /**
+//     * @test
+//     */
+//    public function attribute_image_is_file_for_storing_post()
+//    {
+//
+//        $file = File::create('my_image.jpg');
+//
+//        $data = [
+//            'title' => 'Title',
+//            'description' => 'description',
+//            'image' => 'sdfsdf'
+//
+//        ];
+//
+//        $res = $this->post('/posts', $data);
+//        $res->assertRedirect();
+//        $res->assertInvalid('image');
+//    }
 
 
 }
