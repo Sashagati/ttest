@@ -12,6 +12,13 @@ use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
+
+    public function index()
+    {
+        $posts = Post::all();
+        return PostResource::collection($posts)->resolve();
+
+    }
     public function store(StoreRequest $request)
     {
         $data = $request->validated();

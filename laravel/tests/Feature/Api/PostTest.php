@@ -67,9 +67,7 @@ class PostTest extends TestCase
             'id' => $post->id,
             'title' => $post->title,
             'description' => $post->description,
-            'image_url' => $post->image_url,
-            'created_at' => $post->created_at->format('Y-m-d'),
-            'updated_at' => $post->updated_at->format('Y-m-d'),
+            'image_url' => $post->image_url
 
 
 
@@ -145,6 +143,31 @@ class PostTest extends TestCase
             'description' => $data['description'],
             'image_url' => 'images/' . $file->hashName(),
             ]);
+
+    }
+    /**
+     * @test
+     */
+    public function response_for_route_posts_index_is_view_post_index_with_post()
+    {
+        $this->withoutExceptionHandling();
+
+        $posts = Post::factory()->count(10)->create();
+
+        $response = $this->get('/api/posts');
+        $response->assertOk();
+        $json = $posts->map(function ($post) {
+            return[
+                'id' => $post->id,
+                'title' => $post->title,
+                'description' => $post->description,
+                'image_url' => $post->image_url,
+            ];
+
+
+        })->toArray();
+
+        $response->assertExactJson($json);
 
     }
 
