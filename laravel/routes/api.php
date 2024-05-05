@@ -18,6 +18,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 Route::post('/posts', [\App\Http\Controllers\Api\PostController::class, 'store']);
+Route::get('/posts/{post}', [\App\Http\Controllers\Api\PostController::class, 'show']);
 Route::patch('/posts/{post}', [\App\Http\Controllers\Api\PostController::class, 'update']);
 Route::get('/posts', [\App\Http\Controllers\Api\PostController::class, 'index']);
 
