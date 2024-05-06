@@ -7,6 +7,7 @@ use App\Http\Requests\Api\Post\StoreRequest;
 use App\Http\Requests\Api\Post\UpdateRequest;
 use App\Http\Resources\Post\PostResource;
 use App\Models\Post;
+use http\Env\Response;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -58,6 +59,18 @@ class PostController extends Controller
         unset($data['image']);
         $post->update($data);
         return PostResource::make($post)->resolve();
+
+    }
+
+    public function destroy(Post $post)
+    {
+        $post->delete();
+
+        return response()->json([
+
+                'message' => 'deleted'
+
+        ]);
 
     }
 

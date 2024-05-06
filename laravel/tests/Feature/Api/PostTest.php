@@ -187,12 +187,45 @@ class PostTest extends TestCase
             'description' => $post->description,
             'image_url' => $post->image_url
 
-
-
-
-
         ]);
     }
+    /**
+     * @test
+     */
+    public function a_post_can_be_deleted_by_auth_user()
+    {
+        $this->withoutExceptionHandling();
 
+        $user = User::factory()->create();
+
+        $post = Post::factory()->create();
+
+        $res = $this->ActingAs($user)->delete('/api/posts/' . $post->id);
+
+        $res->assertOk();
+
+        $this->assertDatabaseCount('posts', 0);
+
+        $res->assertJson([
+            'message' => 'deleted'
+        ]);
+
+
+    }
+    /**
+     * @test
+     */
+    public function a_post_can_be_deleted_by_only_auth_user()
+    {
+
+
+        $post = Post::factory()->create();
+        $res = $this->delete('/api/posts/' . $post->id);
+
+        $res->assertUnauthorized();
+
+        $this->assertDatabaseCount('posts', 1);
+
+    }
 
 }
